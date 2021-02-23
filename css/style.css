@@ -1,0 +1,104 @@
+body {
+	padding: 0;
+	margin:0;
+}
+
+
+html, body{
+	width: 100%;
+	height: 100%;
+	display: block;
+  	overflow-y: hidden;
+	font-family: 'abel-regular', Arial, Helvetica, sans-serif;
+	font-size: .98em;
+}
+
+.hide {
+	display: none;
+}
+
+div#bloc1 {
+  float: left;
+  background: #789;
+  width: 25%;
+  height: 100%;
+}
+div#sub-bloc1 {
+    margin-left: 3%;
+}
+div#mapid {
+  height: 93%;
+  width: 75%;
+}
+
+#logo {
+	    float: left;
+    width: 11%;
+}
+
+header{
+	/*padding:25px 0px;Marge verticale*/
+	background-color:#8ABCD7; /*Couleur de fond*/
+	text-align:center;/*texte centré*/
+	display: block;
+
+}
+
+.centercolumn{
+	width: 50%;/*Taille de la colonne centrée moins le padding*/
+	background-color:#8ABCD7;/*Couleur de fond*/
+	margin: auto; /*centrer la colonne*/
+	padding:25px;/*margin interne*/
+}
+
+#searchField {
+	width: 90%;
+	font-family: 'abel-regular';
+	font-size: .95em;
+	height: 25px;
+	border-color: transparent;
+	padding: 5px;
+	border-radius: 5px;
+	box-shadow: -0.02px 0 5px rgba(0,0,0,0.2);
+}
+
+#searchField:focus {
+	outline: none;
+}
+
+/* Bouton d'effacement du cham de recherche */
+#resetSearch {
+	float: right;
+	display: none;
+	background-color: rgba(0,0,0,0);
+	position: absolute;
+	margin-top: -39px;
+	right:10%;
+	border: none;
+	border-color: transparent;
+	padding: 5px;
+	border-radius:5px;
+	transition: .1s ease-in-out;
+	cursor: pointer;
+	z-index: 1000;
+}
+
+#resetSearch > .feather-icons {
+	height: 17px;
+	opacity: .5;
+}
+
+
+#resetSearch:focus {
+	outline: none;
+}
+
+hr {
+	width:65%;
+	margin-top: 20px;
+	margin-right: 20%;
+	border: none;
+	border-top: solid 1px;
+	color:#273375;
+	opacity: .5;
+}
