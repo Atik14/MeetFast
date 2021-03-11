@@ -1,104 +1,185 @@
 body {
-	padding: 0;
-	margin:0;
+    padding: 0;
+    margin: 0;
 }
 
-
-html, body{
-	width: 100%;
-	height: 100%;
-	display: block;
-  	overflow-y: hidden;
-	font-family: 'abel-regular', Arial, Helvetica, sans-serif;
-	font-size: .98em;
+html,
+body {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow-y: hidden;
+    font-family: 'abel-regular', Arial, Helvetica, sans-serif;
+    font-size: 1.1em;
 }
 
 .hide {
-	display: none;
+    display: none;
 }
 
 div#bloc1 {
-  float: left;
-  background: #789;
-  width: 25%;
-  height: 100%;
+    float: left;
+    background: #789;
+    height: 600px;
+    width: 400px;
+    min-height: 30px;
+    min-width: 30px;
+    position: absolute;
+    z-index: 2;
+    top: 120px;
+    /*
+    left: 50px;*/
+    border-radius: 10px;
 }
+
 div#sub-bloc1 {
     margin-left: 3%;
 }
+
 div#mapid {
-  height: 93%;
-  width: 75%;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
 }
 
 #logo {
-	    float: left;
-    width: 11%;
+    float: left;
+    width: 100%;
 }
 
-header{
-	/*padding:25px 0px;Marge verticale*/
-	background-color:#8ABCD7; /*Couleur de fond*/
-	text-align:center;/*texte centré*/
-	display: block;
-
+header {
+    /*padding:25px 0px;Marge verticale*/
+    background-color: #8ABCD7;
+    /*Couleur de fond*/
+    text-align: center;
+    /*texte centré*/
+    display: block;
+    height: 0px;
+    width: 400px;
+    position: absolute;
+    z-index: 3;
 }
 
-.centercolumn{
-	width: 50%;/*Taille de la colonne centrée moins le padding*/
-	background-color:#8ABCD7;/*Couleur de fond*/
-	margin: auto; /*centrer la colonne*/
-	padding:25px;/*margin interne*/
+.centercolumn {
+    width: 50%;
+    /*Taille de la colonne centrée moins le padding*/
+    background-color: #8ABCD7;
+    /*Couleur de fond*/
+    margin: auto;
+    /*centrer la colonne*/
+    padding: 25px;
+    /*margin interne*/
 }
 
 #searchField {
-	width: 90%;
-	font-family: 'abel-regular';
-	font-size: .95em;
-	height: 25px;
-	border-color: transparent;
-	padding: 5px;
-	border-radius: 5px;
-	box-shadow: -0.02px 0 5px rgba(0,0,0,0.2);
+    width: 90%;
+    font-family: 'abel-regular';
+    font-size: .95em;
+    height: 25px;
+    border-color: transparent;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: -0.02px 0 5px rgba(0, 0, 0, 0.2);
 }
 
 #searchField:focus {
-	outline: none;
+    outline: none;
 }
+
 
 /* Bouton d'effacement du cham de recherche */
+
 #resetSearch {
-	float: right;
-	display: none;
-	background-color: rgba(0,0,0,0);
-	position: absolute;
-	margin-top: -39px;
-	right:10%;
-	border: none;
-	border-color: transparent;
-	padding: 5px;
-	border-radius:5px;
-	transition: .1s ease-in-out;
-	cursor: pointer;
-	z-index: 1000;
+    float: right;
+    display: none;
+    background-color: rgba(0, 0, 0, 0);
+    position: absolute;
+    margin-top: -39px;
+    right: 10%;
+    border: none;
+    border-color: transparent;
+    padding: 5px;
+    border-radius: 5px;
+    transition: .1s ease-in-out;
+    cursor: pointer;
+    z-index: 1000;
 }
 
-#resetSearch > .feather-icons {
-	height: 17px;
-	opacity: .5;
+#resetSearch>.feather-icons {
+    height: 17px;
+    opacity: .5;
 }
-
 
 #resetSearch:focus {
-	outline: none;
+    outline: none;
 }
 
 hr {
-	width:65%;
-	margin-top: 20px;
-	margin-right: 20%;
-	border: none;
-	border-top: solid 1px;
-	color:#273375;
-	opacity: .5;
+    width: 65%;
+    margin-top: 20px;
+    margin-right: 20%;
+    border: none;
+    border-top: solid 1px;
+    color: #273375;
+    opacity: .5;
+}
+
+.slidecontainer {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 80%;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #8ABCD7;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #8ABCD7;
+    cursor: pointer;
+}
+
+
+/* HIDE RADIO */
+
+[type=radio] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+
+/* IMAGE STYLES */
+
+[type=radio]+img {
+    cursor: pointer;
+}
+
+
+/* CHECKED STYLES */
+
+[type=radio]:checked+img {
+    outline: 2px solid #8ABCD7;
 }

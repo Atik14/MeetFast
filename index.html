@@ -20,25 +20,32 @@
     <script src="lib/feather.min.js"></script>
     <script src='https://unpkg.com/@turf/turf@6.3.0/turf.min.js'></script>
     <script src='https://raw.githubusercontent.com/mattwilliamson/Google-Maps-Point-in-Polygon/master/maps.google.polygon.containsLatLng.js'></script>
-    <!--  <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap"> </script> -->
+    <!--  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIcqplo9Wd7LgQm8ync8EFU3t4ROobURU&libraries=places&callback=initMap"> </script> -->
+    <script src="js/setDatetimeToNow.js">
+    </script>
+
 </head>
 
-<body>
+<body onload="setDatetimeNow()">
     <header>
-        <img id="logo" src="img/logopts.png" alt="Logo" />
+        <img id="logo" src="img/logopts.png" alt="Logo" class="center" />
         <div class="centercolumn" style="visibility: hidden">
-            T
         </div>
     </header>
     <div id="bloc1">
         <div id="sub-bloc1">
-            <h3>Nombre d'utilisateurs :</h3>
-            <select name="nbusers" id="nb-users">
-              <option value="">--Merci de choisir le nombre d'utilisateurs--</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-          </select>
+            <h4>Choisissez la date et l'heure de départ:</h4>
+            <label for="departure-time"></label>
+            <!-- <h3> <span id="datetimeNow"></span> ${datetime}</h3> -->
+            <input type="datetime-local" id="departure-time" name="departure-time">
+
+            <h4>Choisissez le temps maximal de trajet que vous souhaitez:</h4>
+            <label for="departure-time"></label>
+            <div class="slidecontainer">
+                <input type="range" min="15" max="200" value="60" class="slider" id="myRange">
+                <p>Valeur: <span id="demo"></span> minutes</p>
+            </div>
+
             <!-- <div id = 'search-bar-container'>
             <input type="text" placeholder="Nombre de personnes" id = "searchField">
               <button id = "resetSearch">
@@ -55,11 +62,36 @@
           </div>
         </div> -->
 
-            <h3>Type de lieu :</h3>
+            <h4>Choisissez votre moyen de transport:</h4>
+            <label>
+          <input type="radio" name="modeSelection" value="transport" checked>
+          <img src="/img/train.png" width="50" height="50">
+        </label>
+            <label>
+          <input type="radio" name="modeSelection" value="carOnly">
+          <img src="/img/car.png" width="50" height="50">
+        </label>
+            <label>
+          <input type="radio" name="modeSelection" value="bicycleOnly" >
+          <img src="/img/bicycle.png" width="50" height="50">
+        </label>
+            <label>
+          <input type="radio" name="modeSelection" value="bikeAndTransport" width="100" >
+          <img src="/img/trainPlusBicycle.png" width="150" height="50">
+        </label>
+            <label>
+          <input type="radio" name="modeSelection" value="walkingOnly">
+          <img src="/img/walk.png" width="50" height="50">
+        </label>
+
+            <h4>Type d'activité:</h4>
             <select name="activity" id="list-activity">
               <option value="">--Merci de choisir une activité--</option>
               <option value="restaurant">Restaurant</option>
-              <option value="bibliothèques">Bibliothèques</option>
+              <option value="cafe">Café</option>
+              <option value="bar">Bar</option>
+              <option value="library">Bibliothèque</option>
+              <option value="library">Musée</option>
           </select>
 
             <!-- <h3>Contraintes de temps :</h3>
@@ -69,14 +101,6 @@
                 <i data-feather="x" class="feather-icons"></i>
               </button>
           </div> -->
-
-            <h3>Mode de transports :</h3>
-            <select name="transport" id="list-transport">
-              <option value="">--Merci de choisir un type de transport--</option>
-              <option value="velo">Vélo</option>
-              <option value="voiture">Voiture</option>
-              <option value="bus">Bus</option>
-          </select>
         </div>
     </div>
     <div id="mapid">
@@ -88,7 +112,16 @@
     <!-- 
     <script src= "js/legend.js"></script> -->
     <script src="js/isochrones.js"></script>
-    <script src="js/test.js"></script>
+    <script src="js/addIsochronesAndIntersection.js"></script>
+    <script>
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value;
+
+        slider.oninput = function() {
+            output.innerHTML = this.value;
+        }
+    </script>
     <script type="javascript">feather.replace()</script>
 </body>
 
