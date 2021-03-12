@@ -47,22 +47,84 @@ var poiLayer = L.layerGroup().addTo(map);
 
 // json.addTo(map);
 var coordaddr = new Array;
-var geojson_list = new Array;
-var intersection;
-var centerMass;
-var nb_users;
+var isochroneList = new Array;
+var intersection = null;
+var centerMass = null;
+var nb_users = 0;
+document.getElementById("nbusers").innerHTML = nb_users;
 var incr = 0;
+var msg = "";
 
 var poiIcon = L.Icon.extend({
     options: {
-        iconSize: [10, 13],
+        iconSize: [20, 26],
         iconAnchor: [22, 94],
         popupAnchor: [-3, -76]
     }
 });
 
+
+
+function getColor(i) {
+    return i == 5 ? '#D7E22F' :
+        i == 4 ? '#2FE2DA' :
+        i == 3 ? '#E2472F' :
+        i == 2 ? '#C12FE2' :
+        i == 1 ? '#2F6BE2' :
+        '#2FE268';
+}
+
+function style(i) {
+    return {
+        fillColor: getColor(i),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.3
+    };
+}
+
+function styleHighlight() {
+    return {
+        fillColor: '#3D2FE2',
+        weight: 2,
+        opacity: 1,
+        color: 'black',
+        dashArray: '',
+        fillOpacity: 0.5
+    };
+}
+
+function addIsochroneToLayer(isochrone, userNumber) {
+    var myLayer = L.geoJson(isochrone, { style: style(userNumber) }).addTo(layerGroup);
+    var newBounds = myLayer.getBounds();
+    map.fitBounds(newBounds);
+}
+
+function isochroneIntersection(firstIsochrone, secondIsochrone) {
+    console.log(firstIsochrone);
+    intersection = turf.intersect(firstIsochrone, secondIsochrone);
+    console.log(intersection);
+
+    if (intersection == null) {
+        msg = "Il n'y a aucune zone de rencontre entre les utilisateurs, veuillez réinitialiser la carte et modifier vos critères de trajet.";
+        document.getElementById("msg").innerHTML = msg;
+    }
+
+    var myLayer = L.geoJson(intersection.geometry, { style: styleHighlight() }).addTo(intersectionLayer);
+    var newBounds = myLayer.getBounds();
+    map.fitBounds(newBounds);
+
+}
+
+function addCenterOfMass() {
+    centerMass = turf.centerOfMass(intersection);
+    console.log(centerMass.geometry.coordinates);
+    var newMarker = L.marker([centerMass.geometry.coordinates[1], centerMass.geometry.coordinates[0]]).addTo(markerLayer);
+}
+
 function addPointsOfInterests(area, centerOfMass, activity) {
-    poiLayer.clearLayers();
     const bbox = turf.bbox(area);
     const center = centerOfMass;
     const category = 'pizza';
@@ -104,6 +166,12 @@ function selectModeOfTransport(radiosArray, urlArray) {
     return urlArray[i]
 }
 
+function clearLayers() {
+    intersectionLayer.clearLayers();
+    markerLayer.clearLayers();
+    poiLayer.clearLayers();
+}
+
 function addMarker(e) {
     // Add marker to map at click location; add popup window
     var newMarker = new L.marker(e.latlng).addTo(map);
@@ -115,6 +183,7 @@ function addMarker(e) {
     //    .openOn(map);
 
     var sandboxToken = '8fbd9b17-1ee9-4cc1-8359-bb11ab53144b';
+    var orsToken = '5b3ce3597851110001cf6248ce38e583d618423d904fbae69e1c3e70';
 
     // Isochron starting point
     var from = [coordaddr[incr].lat, coordaddr[incr].lng];
@@ -127,10 +196,13 @@ function addMarker(e) {
 
     // Navitia query for this isochron
     var url = 'https://api.navitia.io/v1/coverage/fr-idf/isochrones?from=' + from[1] + ';' + from[0] + '&boundary_duration%5B%5D=' + maxDuration + '&datetime=' + dateTime + '&';
-    var carOnly = url + 'allowed_id%5B%5D=physical_mode%3ABus&forbidden_uris%5B%5D=physical_mode%3ABus&last_section_mode%5B%5D=car&';
-    var bicycleOnly = url + 'allowed_id%5B%5D=physical_mode%3ABus&forbidden_uris%5B%5D=physical_mode%3ABus&last_section_mode%5B%5D=bike&';
+    var carOnly = "https://api.openrouteservice.org/v2/isochrones/driving-car/locations=" + from[1] + "," + from[0] + "&range=" + "[0," + maxDuration + "]" + "&api_key=" + orsToken;
+    //var caronlyNavitia = url + 'allowed_id%5B%5D=physical_mode%3ABus&forbidden_uris%5B%5D=physical_mode%3ABus&last_section_mode%5B%5D=car&';
+    var bicycleOnly = "https://api.openrouteservice.org/v2/isochrones/cycling-regular/locations=" + from[1] + "," + from[0] + "&range=" + "[0," + maxDuration + "]" + "&api_key=" + orsToken;
+    //var bicycleOnlyNavitia = url + 'allowed_id%5B%5D=physical_mode%3ABus&forbidden_uris%5B%5D=physical_mode%3ABus&last_section_mode%5B%5D=bike&';
     var bikeAndTransport = url + 'first_section_mode%5B%5D=bike&';
-    var walkingOnly = url + 'allowed_id%5B%5D=physical_mode%3ABus&forbidden_uris%5B%5D=physical_mode%3ABus&last_section_mode%5B%5D=walking&';
+    var walkingOnly = "https://api.openrouteservice.org/v2/isochrones/foot-walking/locations=" + from[1] + "," + from[0] + "&range=" + "[0," + maxDuration + "]" + "&api_key=" + orsToken;
+    //var walkingOnlyNavitia = url + 'allowed_id%5B%5D=physical_mode%3ABus&forbidden_uris%5B%5D=physical_mode%3ABus&last_section_mode%5B%5D=walking&';
     //var carAndTransport = url + 'first_section_mode%5B%5D=car&'; // ne marche pas
 
     var urlArray = [url, carOnly, bicycleOnly, bikeAndTransport, walkingOnly];
@@ -140,19 +212,43 @@ function addMarker(e) {
     var urlSelected = selectModeOfTransport(radiosArray, urlArray);
     console.log(urlSelected);
 
-    // Call navitia api
-    $.ajax({
-        type: 'GET',
-        url: urlSelected,
-        dataType: "json",
-        headers: {
-            Authorization: 'Basic ' + btoa(sandboxToken)
-        },
-        success: drawIsochron,
-        error: function(xhr, textStatus, errorThrown) {
-            alert('Error when trying to process isochron: "' + textStatus + '", "' + errorThrown + '"');
-        }
-    });
+    if (urlSelected == url || urlSelected == bikeAndTransport) {
+        // Call navitia api
+        $.ajax({
+            type: 'GET',
+            url: urlSelected,
+            dataType: "json",
+            headers: {
+                Authorization: 'Basic ' + btoa(sandboxToken)
+            },
+            success: drawIsochron,
+            error: function(xhr, textStatus, errorThrown) {
+                alert('Error when trying to process isochron: "' + textStatus + '", "' + errorThrown + '"');
+            }
+        });
+    } else {
+        let request = new XMLHttpRequest();
+
+        request.open('POST', "https://api.openrouteservice.org/v2/isochrones/driving-car");
+        request.setRequestHeader('Accept', 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8');
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.setRequestHeader('Authorization', '5b3ce3597851110001cf6248ce38e583d618423d904fbae69e1c3e70');
+
+        request.onreadystatechange = function() {
+            if (this.readyState === 4) {
+                console.log('Status:', this.status);
+                console.log('Headers:', this.getAllResponseHeaders());
+                console.log('Body:', this.response); // .features[0].geometry
+                var responseJson = JSON.parse(this.response);
+                console.log('Response json:', responseJson.features[0].geometry);
+                drawIsochron(responseJson.features[0].geometry);
+            }
+        };
+
+        const body = '{"locations":[[' + from[1] + ',' + from[0] + ']],"range":[0,' + maxDuration + ']}';
+
+        request.send(body);
+    }
 
     function drawIsochron(result) {
         // $.each(result.isochrones, function(i, isochrone) {
@@ -161,92 +257,48 @@ function addMarker(e) {
         //   var newBounds = myLayer.getBounds();
         //   map.fitBounds(newBounds);
         // });
-
-
-        function getColor(i) {
-            return i == 5 ? '#D7E22F' :
-                i == 4 ? '#2FE2DA' :
-                i == 3 ? '#E2472F' :
-                i == 2 ? '#C12FE2' :
-                i == 1 ? '#2F6BE2' :
-                '#2FE268';
+        if (urlSelected == url || urlSelected == bikeAndTransport) {
+            isochroneList.push(result.isochrones[0].geojson);
+        } else {
+            isochroneList.push(result);
         }
-
-        function style(i) {
-            return {
-                fillColor: getColor(i),
-                weight: 2,
-                opacity: 1,
-                color: 'white',
-                dashArray: '3',
-                fillOpacity: 0.3
-            };
-        }
-
-        function styleHighlight() {
-            return {
-                fillColor: '#3D2FE2',
-                weight: 2,
-                opacity: 1,
-                color: 'black',
-                dashArray: '',
-                fillOpacity: 0.5
-            };
-        }
-
-        function addIsochroneToLayer(isochroneArray, userNumber) {
-            var polygon = isochroneArray[0].geojson;
-            var myLayer = L.geoJson(polygon, { style: style(userNumber) }).addTo(layerGroup);
-            var newBounds = myLayer.getBounds();
-            map.fitBounds(newBounds);
-        }
-
-        function isochroneIntersection(firstIsochrone, secondIsochrone, userNumber) {
-            console.log(firstIsochrone[0]);
-            if (userNumber == 2) {
-                intersection = turf.intersect(firstIsochrone[0].geojson, secondIsochrone[0].geojson);
-            } else {
-                intersection = turf.intersect(firstIsochrone[0].geojson, secondIsochrone.geometry);
-            }
-            console.log(intersection);
-
-            var myLayer = L.geoJson(intersection.geometry, { style: styleHighlight(userNumber) }).addTo(intersectionLayer);
-            var newBounds = myLayer.getBounds();
-            map.fitBounds(newBounds);
-
-        }
-
-        function addCenterOfMass() {
-            centerMass = turf.centerOfMass(intersection);
-            console.log(centerMass.geometry.coordinates);
-            var newMarker = L.marker([centerMass.geometry.coordinates[1], centerMass.geometry.coordinates[0]]).addTo(markerLayer);
-        }
-
-        geojson_list.push(result.isochrones);
-        nb_users = geojson_list.length;
+        nb_users = isochroneList.length;
+        document.getElementById("nbusers").innerHTML = nb_users;
 
         if (nb_users == 1) {
             console.log(nb_users);
-            console.log(typeof geojson_list[0]);
-
-            addIsochroneToLayer(geojson_list[0], nb_users - 1);
+            console.log(typeof isochroneList[0]);
+            msg = "Ajoutez au moins un utilisateur pour déterminer une zone de rencontre";
+            document.getElementById("msg").innerHTML = msg;
+            addIsochroneToLayer(isochroneList[0], nb_users - 1);
         } else if (nb_users == 2) {
-
             var lastUser = nb_users - 1;
-            addIsochroneToLayer(geojson_list[lastUser], lastUser);
-            isochroneIntersection(geojson_list[lastUser], geojson_list[0], nb_users);
+            addIsochroneToLayer(isochroneList[lastUser], lastUser);
+            isochroneIntersection(isochroneList[lastUser], isochroneList[0]);
             addCenterOfMass();
-            addPointsOfInterests(intersection, centerMass, "cafe");
+
+            msg = "La zone de rencontre est indiquée sur la carte, à vous de choisir l'activité souhaitée par le groupe.";
+            document.getElementById("msg").innerHTML = msg;
+
+            const activity = document.getElementById("list-activity").value;
+            if (activity != "") {
+                addPointsOfInterests();
+            }
 
         } else {
-            intersectionLayer.clearLayers();
-            markerLayer.clearLayers();
-
+            clearLayers();
             var lastUser = nb_users - 1;
-            addIsochroneToLayer(geojson_list[lastUser], lastUser);
-            isochroneIntersection(geojson_list[lastUser], intersection, nb_users);
+            addIsochroneToLayer(isochroneList[lastUser], lastUser);
+            isochroneIntersection(isochroneList[lastUser], intersection.geometry);
             addCenterOfMass();
-            addPointsOfInterests(intersection, centerMass, "cafe");
+
+            msg = "La zone de rencontre est indiquée sur la carte, à vous de choisir l'activité souhaitée par le groupe.";
+            document.getElementById("msg").innerHTML = msg;
+
+            const activity = document.getElementById("list-activity").value;
+            if (activity != "") {
+                addPointsOfInterests();
+            }
         }
 
     }

@@ -46,22 +46,6 @@
                 <p>Valeur: <span id="demo"></span> minutes</p>
             </div>
 
-            <!-- <div id = 'search-bar-container'>
-            <input type="text" placeholder="Nombre de personnes" id = "searchField">
-              <button id = "resetSearch">
-                <i data-feather="x" class="feather-icons"></i>
-              </button>
-          </div> -->
-            <!-- <div id="addr1">
-        <h3>Adresse #1 :</h3>
-          <div id = 'search-bar-container'>
-            <input type="text" placeholder="Adresse" id = "searchField">
-              <button id = "resetSearch">
-                <i data-feather="x" class="feather-icons"></i>
-              </button>
-          </div>
-        </div> -->
-
             <h4>Choisissez votre moyen de transport:</h4>
             <label>
           <input type="radio" name="modeSelection" value="transport" checked>
@@ -85,34 +69,30 @@
         </label>
 
             <h4>Type d'activité:</h4>
-            <select name="activity" id="list-activity">
+            <select onchange="addPointsOfInterests()" name="activity" id="list-activity">
               <option value="">--Merci de choisir une activité--</option>
               <option value="restaurant">Restaurant</option>
               <option value="cafe">Café</option>
               <option value="bar">Bar</option>
               <option value="library">Bibliothèque</option>
-              <option value="library">Musée</option>
+              <option value="museum">Musée</option>
           </select>
+            <h4><span id="msgPlaces"></span>
 
-            <!-- <h3>Contraintes de temps :</h3>
-          <div id = 'search-bar-container'>
-            <input type="text" placeholder="Moins d'une heure" id = "searchField">
-              <button id = "resetSearch">
-                <i data-feather="x" class="feather-icons"></i>
-              </button>
-          </div> -->
+                <hr>
+
+                <h4>Veuillez cliquer sur la carte pour ajouter des utilisateurs (nombre d'utilisateurs placés: <span id="nbusers"></span>)
+                </h4>
+                <h4><span id="msg"></span>
+                </h4>
+
         </div>
     </div>
     <div id="mapid">
     </div>
-    <!-- chargement script js -->
-    <!-- <script src= "js/departdata.js"></script>
-    <script src= "js/regiondata.js"></script> -->
-    <!-- <script src= "js/app.js"></script> -->
-    <!-- 
-    <script src= "js/legend.js"></script> -->
     <script src="js/isochrones.js"></script>
     <script src="js/addIsochronesAndIntersection.js"></script>
+    <script src="js/searchPlaces.js"></script>
     <script>
         var slider = document.getElementById("myRange");
         var output = document.getElementById("demo");
