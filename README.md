@@ -2,7 +2,7 @@
 # MeetFast
 
 
-![logo](https://github.com/Atik14/PTSProject/blob/main/img/logopts.PNG=100x20)
+![logo](https://github.com/Atik14/PTSProject/blob/main/img/logopts.PNG)
 
 [1 - Présentation](#presentation)  
 [2 - Résultats](#results)  
