@@ -1,14 +1,19 @@
+// Program to place the points of interest in the map where there is intersection between users
+
 var nbOfResults = 0;
 var msgPoi = "";
 
 function addPointsOfInterests() {
     if (intersection != null && nb_users >= 2) {
-        clearPoiLayer()
-        area = intersection;
-        const bbox = turf.bbox(intersection);
-        const center = centerMass;
         const activity = document.getElementById("list-activity").value;
         if (activity != "") {
+            clearPoiLayer();
+            console.log(intersectionLayer);
+            //var newBounds = intersectionLayer.getBounds();
+            //map.fitBounds(newBounds);
+            const area = intersection;
+            const bbox = turf.bbox(intersection);
+            const center = centerMass;
             var icon = new poiIcon({ iconUrl: '/img/' + activity + '.png' });
             const placesUrl = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + activity + ".json?access_token=" +
                 accessToken + "&types=poi&bbox=" + bbox.join(",") +

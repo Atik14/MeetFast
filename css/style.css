@@ -20,13 +20,13 @@ body {
 div#bloc1 {
     float: left;
     background: #789;
-    height: 800px;
+    height: 860px;
     width: 400px;
     min-height: 30px;
     min-width: 30px;
     position: absolute;
     z-index: 2;
-    top: 120px;
+    top: 230px;
     /*
     left: 50px;*/
     border-radius: 10px;

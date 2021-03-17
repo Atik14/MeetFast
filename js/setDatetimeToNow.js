@@ -1,3 +1,6 @@
+// Program to set the calendar to the current date when opening the application.
+// And also to set the limit to one week after the current date.
+
 function setDatetimeNow() {
     // For todays date;
     Date.prototype.today = function() {
